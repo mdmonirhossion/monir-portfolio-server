@@ -1,39 +1,39 @@
-# Portfolio Backend Server
+# 🌟 Portfolio Backend Server - Md Monir Hossion
 
-Node.js/Express backend API for the portfolio project management system. Provides RESTful endpoints for managing portfolio projects with MongoDB integration.
+Node.js/Express backend API for the portfolio project management system. Provides RESTful endpoints for managing portfolio projects, coursework, and resume link management with MongoDB integration.
 
 ## 🌐 Live API
 
-**Base URL:** [https://api.portfolio.rijoan.com](https://api.portfolio.rijoan.com)  
-**Portfolio Website:** [portfolio.rijoan.com](https://portfolio.rijoan.com)
+**Base URL:** [https://monir-portfolio-server.vercel.app](https://monir-portfolio-server.vercel.app)  
+**Portfolio Website:** [portfolio.monir.com](https://monir.com)
 
 ## ✨ Features
 
-- **RESTful API:** Complete CRUD operations for portfolio projects
-- **MongoDB Integration:** Scalable NoSQL database with proper data modeling
-- **Input Validation:** Comprehensive request validation and error handling
-- **CORS Support:** Cross-origin resource sharing enabled for frontend integration
-- **Admin Security:** Protected routes for project management operations
-- **Error Handling:** Structured error responses and logging
-- **Environment Configuration:** Secure environment variable management
+- **RESTful API:** Complete CRUD operations for portfolio projects, coursework, and resume link.
+- **MongoDB Integration:** Scalable NoSQL database with proper collections (`projects`, `coursework`, `resume`).
+- **Input Validation:** Comprehensive request validation and error handling.
+- **CORS Support:** Cross-origin resource sharing enabled for frontend integration.
+- **Admin Security:** Protected write operations (POST, PUT, DELETE) restricted to admin email (`mdmonirhossion2002@gmail.com`).
+- **Nodemailer Integration:** Handles contact form submissions and sends emails securely via Gmail App Passwords.
+- **Environment Configuration:** Secure environment variable management using `.env` file.
 
 ## 🛠️ Technology Stack
 
 - **Node.js** - JavaScript runtime environment
 - **Express.js** - Fast, unopinionated web framework
 - **MongoDB** - NoSQL document database
-- **MongoDB Node.js Driver** - Official MongoDB driver
 - **CORS** - Cross-Origin Resource Sharing middleware
 - **dotenv** - Environment variable loader
+- **Nodemailer** - Mail sender module
 
 ## 📁 Project Structure
 
 ```
 Server/
-├── index.js          # Main server file with all routes
+├── index.js          # Main server file with all routes and middleware
 ├── package.json      # Dependencies and scripts
 ├── README.md         # This file
-└── .env             # Environment variables (not in repo)
+└── .env             # Environment variables (git-ignored for security)
 ```
 
 ## 🚀 Getting Started
@@ -41,13 +41,13 @@ Server/
 ### Prerequisites
 - Node.js (v16 or higher)
 - MongoDB Atlas account or local MongoDB installation
-- npm or yarn package manager
+- npm package manager
 
 ### Installation
 
 1. **Navigate to server directory**
    ```bash
-   cd Server
+   cd Portfolio_Monir_Server
    ```
 
 2. **Install dependencies**
@@ -59,26 +59,28 @@ Server/
    
    Create a `.env` file in the root directory:
    ```env
-   MONGODB_URI=your_mongodb_connection_string
    PORT=5000
-   NODE_ENV=development
+   MONGODB_URI="your_mongodb_connection_string"
+   EMAIL_USER="mdmonirhossion2002@gmail.com"
+   EMAIL_PASS="your_gmail_app_password"
    ```
 
 4. **Start the server**
    ```bash
-   # Development
-   npm start
-   # or
-   node index.js
+   # Development (with nodemon auto-restart)
+   npm run dev
    
    # Production
-   NODE_ENV=production node index.js
+   npm start
    ```
 
 5. **Verify installation**
-   ```bash
-   curl http://localhost:5000
-   # Should return server status
+   Open `http://localhost:5000` in your browser. It should return:
+   ```json
+   {
+       "message": "Portfolio Server is Running....",
+       "status": "active"
+   }
    ```
 
 ## 📝 API Documentation
@@ -89,8 +91,8 @@ http://localhost:5000/api
 ```
 
 ### Authentication
-- Admin operations require specific email authentication
-- Admin email: `rijoanmaruf@gmail.com`
+- Admin write/modify operations require admin email verification.
+- Admin email: `mdmonirhossion2002@gmail.com`
 
 ### Endpoints
 
@@ -100,175 +102,83 @@ http://localhost:5000/api
 | GET | `/` | Server health status |
 
 #### Projects Management
-
 | Method | Endpoint | Description | Admin Only |
 |--------|----------|-------------|------------|
 | GET | `/api/projects` | Get all projects | No |
 | GET | `/api/projects/featured` | Get featured projects only | No |
 | GET | `/api/projects/:id` | Get single project by ID | No |
-| POST | `/api/projects` | Create new project | Yes |
-| PUT | `/api/projects/:id` | Update existing project | Yes |
-| DELETE | `/api/projects/:id` | Delete project | Yes |
+| POST | `/api/projects` | Create a new project | Yes |
+| PUT | `/api/projects/:id` | Update an existing project | Yes |
+| DELETE | `/api/projects/:id` | Delete a project | Yes |
 
-### Request/Response Examples
+#### Coursework Management
+| Method | Endpoint | Description | Admin Only |
+|--------|----------|-------------|------------|
+| GET | `/api/coursework` | Get all coursework | No |
+| POST | `/api/coursework` | Add new coursework | Yes |
+| PUT | `/api/coursework/:id` | Update coursework | Yes |
+| DELETE | `/api/coursework/:id` | Delete coursework | Yes |
 
-#### Get All Projects
-```bash
-GET /api/projects
+#### Resume Link Management
+| Method | Endpoint | Description | Admin Only |
+|--------|----------|-------------|------------|
+| GET | `/api/resume` | Get current resume link | No |
+| PUT | `/api/resume` | Create or update resume link | Yes |
 
-Response (200):
-{
-  "success": true,
-  "count": 5,
-  "data": [
-    {
-      "_id": "60a7c9b8e4b0a72f4c8d9e1f",
-      "title": "Project Title",
-      "description": "Project description",
-      "image": "https://example.com/image.jpg",
-      "tags": ["React", "Node.js"],
-      "isFeatured": true,
-      "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z"
-    }
-  ]
-}
-```
+#### Contact Submission
+| Method | Endpoint | Description | Admin Only |
+|--------|----------|-------------|------------|
+| POST | `/api/contacts` | Send contact form email | No |
 
-#### Create New Project
-```bash
-POST /api/projects
-Content-Type: application/json
-
-{
-  "title": "New Project",
-  "description": "Detailed project description",
-  "image": "https://example.com/image.jpg",
-  "clientSourceCode": "https://github.com/user/client-repo",
-  "serverSourceCode": "https://github.com/user/server-repo",
-  "liveLink": "https://project-demo.com",
-  "isFeatured": true,
-  "tags": ["React", "Node.js", "MongoDB"]
-}
-
-Response (201):
-{
-  "success": true,
-  "message": "Project added successfully",
-  "data": {
-    "_id": "60a7c9b8e4b0a72f4c8d9e1f",
-    // ... project data
-  }
-}
-```
-
-#### Error Response
-```bash
-Response (400/404/500):
-{
-  "success": false,
-  "message": "Error description",
-  "error": "Detailed error message"
-}
-```
+---
 
 ## 📊 Database Schema
 
 ### Projects Collection (`portfolioDB.projects`)
-
 ```javascript
 {
   _id: ObjectId,                    // Auto-generated MongoDB ID
   title: String,                    // Required - Project title
   description: String,              // Required - Project description
-  image: String,                    // Required - Project image URL
-  clientSourceCode: String | null,  // Optional - Frontend repository URL
-  serverSourceCode: String | null,  // Optional - Backend repository URL
+  image: String,                    // Required - Main image URL
+  images: Array<String>,            // Optional - Additional images URLs
+  clientSourceCode: String | null,  // Optional - Frontend source code URL
+  serverSourceCode: String | null,  // Optional - Backend source code URL
   liveLink: String | null,          // Optional - Live demo URL
+  liveVideoUrl: String | null,      // Optional - Demo video URL
   isFeatured: Boolean,              // Featured status (default: false)
   tags: Array<String>,              // Array of technology tags
-  createdAt: Date,                  // Auto-generated creation timestamp
-  updatedAt: Date                   // Auto-updated modification timestamp
+  createdAt: Date,                  // Auto-generated timestamp
+  updatedAt: Date                   // Auto-updated timestamp
 }
 ```
 
-### Validation Rules
-- **title**: Required, string, trimmed
-- **description**: Required, string, trimmed
-- **image**: Required, string, trimmed (URL)
-- **clientSourceCode**: Optional, string, trimmed
-- **serverSourceCode**: Optional, string, trimmed
-- **liveLink**: Optional, string, trimmed
-- **isFeatured**: Boolean conversion
-- **tags**: Array of strings, each trimmed
-
-## 🔧 Available Scripts
-
-```bash
-npm start        # Start the server
-node index.js    # Direct Node.js execution
+### Coursework Collection (`portfolioDB.coursework`)
+```javascript
+{
+  _id: ObjectId,                    // Auto-generated MongoDB ID
+  title: String,                    // Required - Course title
+  status: String,                   // Status ('Completed', 'Ongoing', 'Upcoming')
+  createdAt: Date,
+  updatedAt: Date
+}
 ```
-
-## 🌍 Environment Variables
-
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `MONGODB_URI` | MongoDB connection string | Yes | - |
-| `PORT` | Server port number | No | 5000 |
-| `NODE_ENV` | Environment mode | No | development |
-
-## 🔐 Security Features
-
-- **Input Validation**: All inputs are validated and sanitized
-- **MongoDB Injection Protection**: Using parameterized queries
-- **CORS Configuration**: Properly configured for frontend integration
-- **Error Handling**: Sensitive information not exposed in production
-- **Admin Protection**: Write operations restricted to admin users
-
-## 🚀 Deployment
-
-### Production Environment
-- **Hosting**: Railway/Heroku/DigitalOcean
-- **Database**: MongoDB Atlas
-- **Environment**: Production environment variables set
-
-### Deployment Steps
-1. Set production environment variables
-2. Deploy to hosting platform
-3. Configure database connection
-4. Test API endpoints
-
-## 📈 Performance Considerations
-
-- **Database Indexing**: Proper indexes on frequently queried fields
-- **Connection Pooling**: MongoDB driver handles connection pooling
-- **Error Logging**: Comprehensive error logging for debugging
-- **Response Optimization**: Minimal response payloads
-
-## 🐛 Common Issues
-
-### Database Connection
-```bash
-# Check MongoDB URI format
-mongodb+srv://username:password@cluster.mongodb.net/database
-
-# Verify network access in MongoDB Atlas
-# Ensure IP whitelist includes deployment server
-```
-
-### CORS Issues
-```bash
-# Frontend running on different port
-# CORS is configured to allow all origins (*)
-# Update CORS settings for production
-```
-
-## 👨‍💻 Developer
-
-**Rijoan Maruf**
-- Website: [portfolio.rijoan.com](https://portfolio.rijoan.com)
-- Email: rijoanmaruf@gmail.com
 
 ---
 
-**Portfolio Backend API - Built with Node.js, Express.js, and MongoDB**
+## 🔐 Security Features
+
+- **Input Sanitization**: All inputs are trimmed and validated before database interaction.
+- **Environment Variables**: Sensitive connection details and emails are stored in `.env`.
+- **CORS Configured**: Cross-Origin Request parameters restrict unauthorized origin connections.
+- **Admin Verification**: Sensitive write/update API operations check for the admin email `mdmonirhossion2002@gmail.com`.
+
+---
+
+## 👤 Developer
+
+**Md Monir Hossion**
+- GitHub: [@mdmonirhossion](https://github.com/mdmonirhossion)
+- LinkedIn: [mdmonirhossion](https://www.linkedin.com/in/mdmonirhossion/)
+- Email: mdmonirhossion2002@gmail.com
+- Contact: +8801770183572
