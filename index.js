@@ -349,7 +349,7 @@ app.post('/api/coursework', async (req, res) => {
         const { title, status, userEmail } = req.body;
 
         // Check if user is admin
-        if (userEmail !== 'rijoanmaruf@gmail.com') {
+        if (userEmail !== 'mdmonirhossion2002@gmail.com') {
             return res.status(403).json({
                 success: false,
                 message: 'Unauthorized access'
@@ -403,7 +403,7 @@ app.put('/api/coursework/:id', async (req, res) => {
         const { title, status, userEmail } = req.body;
 
         // Check if user is admin
-        if (userEmail !== 'rijoanmaruf@gmail.com') {
+        if (userEmail !== 'mdmonirhossion2002@gmail.com') {
             return res.status(403).json({
                 success: false,
                 message: 'Unauthorized access'
@@ -473,7 +473,7 @@ app.delete('/api/coursework/:id', async (req, res) => {
         const { userEmail } = req.body;
 
         // Check if user is admin
-        if (userEmail !== 'rijoanmaruf@gmail.com') {
+        if (userEmail !== 'mdmonirhossion2002@gmail.com') {
             return res.status(403).json({
                 success: false,
                 message: 'Unauthorized access'
@@ -549,7 +549,7 @@ app.put('/api/resume', async (req, res) => {
         const { link, userEmail } = req.body;
 
         // Check if user is admin
-        if (userEmail !== 'rijoanmaruf@gmail.com') {
+        if (userEmail !== 'mdmonirhossion2002@gmail.com') {
             return res.status(403).json({
                 success: false,
                 message: 'Unauthorized access'
@@ -670,7 +670,7 @@ app.post('/api/contacts', async (req, res) => {
                         </div>
                         
                         <div style="margin-top: 15px;">
-                            <a href="mailto:${email.trim()}?subject=Re: Your message to Rijoan Maruf" 
+                            <a href="mailto:${email.trim()}?subject=Re: Your message to Monir Hossion" 
                                style="display: inline-block; background-color: #4f46e5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
                                 Reply to ${name.trim()}
                             </a>
